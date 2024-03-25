@@ -12,8 +12,3 @@ resource "aws_s3_bucket" "example_bucket" {
   acl = "private"
 }
 
-# Define an AWS EC2 instance
-resource "aws_instance" "example_instance" {
-  ami = var.ami_id
-  instance_type = var.instance_type
-}
