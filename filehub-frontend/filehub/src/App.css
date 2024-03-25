@@ -5,12 +5,12 @@
 .App {
   text-align: center;
 
-  background-size: cover; /* Cover the entire page */
-  background-position: center; /* Center the background image */
+  background-size: cover;
+  background-position: center;
 }
 
 .App-header {
-  min-height: 100vh; /* Make header take up full viewport height */
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
