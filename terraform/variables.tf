@@ -1,6 +1,6 @@
 variable "aws_region" {
   description = "The AWS region to deploy resources in"
-  default = "us-east-1"
+  default = "ap-southeast-1"
 }
 
 variable "aws_access_key" {
