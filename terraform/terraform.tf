@@ -6,11 +6,11 @@ provider "aws" {
   secret_key = var.aws_secret_key
 }
 
-# Define an AWS S3 bucket
-#resource "aws_s3_bucket" "example_bucket" {
-  #bucket = var.bucket_name
- # acl = "private"
-#}
+#Define an AWS S3 bucket
+resource "aws_s3_bucket" "example_bucket" {
+  bucket = var.bucket_name
+  acl = "private"
+}
 
 # Define an AWS EC2 instance
 resource "aws_instance" "example_instance" {
