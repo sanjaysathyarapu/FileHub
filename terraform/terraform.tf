@@ -7,10 +7,10 @@ provider "aws" {
 }
 
 # Define an AWS S3 bucket
-resource "aws_s3_bucket" "example_bucket" {
-  bucket = var.bucket_name
-  acl = "private"
-}
+#resource "aws_s3_bucket" "example_bucket" {
+  #bucket = var.bucket_name
+ # acl = "private"
+#}
 
 # Define an AWS EC2 instance
 resource "aws_instance" "example_instance" {
