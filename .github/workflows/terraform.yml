@@ -20,15 +20,19 @@ jobs:
     
     - name: Initialize Terraform
       run: terraform init
+      working-directory: terraform
 
     - name: Validate Terraform Configuration
       run: terraform validate
+      working-directory: terraform
 
     - name: Plan Terraform Changes
-      run: terraform plan -input=false -out=tfplan
+      run: terraform plan
+      working-directory: terraform
 
     - name: Apply Terraform Changes
-      run: terraform apply -input=false tfplan
+      run: terraform apply
+      working-directory: terraform
       env:
         TF_VAR_aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
         TF_VAR_aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
