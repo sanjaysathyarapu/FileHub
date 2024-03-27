@@ -10,12 +10,12 @@ variable "aws_access_key" {
 
 variable "aws_secret_key" {
   description = "The AWS secret key"
-  default = "TPuXd8ChRezanmpwsO3j5F8ch1vi/e6ih4LYbZZ1"
+  default = "-"
 }
 
 variable "ami_id" {
   description = "The ID of the AMI to use for the EC2 instance"
-  default = "ami-0975c1260c20b41be"
+  default = "-"
 }
 
 variable "instance_type" {
