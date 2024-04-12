@@ -1,0 +1,58 @@
+.home {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Align content horizontally */
+}
+
+.home__content {
+    padding-top: 100px; /* Adjust based on navbar height */
+    width: 80%; /* Adjust width for better readability */
+    max-width: 1200px; /* Limit maximum width */
+}
+
+.upload-btn-container {
+    margin-bottom: 20px;
+    text-align: right; /* Align button to the right */
+}
+
+.upload-btn {
+    background-color: #007bff; /* Use a primary color */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Add transition for smooth hover effect */
+}
+
+.upload-btn:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+.file-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+}
+
+.file-table th, .file-table td {
+    padding: 12px; /* Increase padding for better spacing */
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.file-table th {
+    background-color: #f8f9fa; /* Use a lighter background color */
+    color: #333;
+    font-weight: bold; /* Make column headers bold */
+}
+
+.file-table td a {
+    color: #007bff; /* Link color */
+    text-decoration: none;
+    transition: color 0.3s ease; /* Add transition for smooth color change */
+}
+
+.file-table td a:hover {
+    color: #0056b3; /* Darker shade on hover */
+}

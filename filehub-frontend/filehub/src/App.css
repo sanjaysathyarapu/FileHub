@@ -1,56 +1,76 @@
-.App {
-  text-align: center;
-}
-
-.App {
-  text-align: center;
-
-  background-size: cover;
-  background-position: center;
-}
-
-.App-header {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+@keyframes backgroundLinesAnimation {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 100% 100%;
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.App {
+  text-align: center;
+  background: linear-gradient(45deg, #9d9790, #f3f2ef, #dde5dd, #e8ecef); /* Gradient background */
+  background-size: 200% 200%; /* Adjust background size */
+  animation: backgroundLinesAnimation 20s linear infinite; /* Apply background animation */
 }
 
-.App-link {
-  color: #61dafb;
+/* Pseudo-element to generate lines */
+.App::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(
+          to right,
+          rgba(255, 255, 255, 0.3) 10%,
+          transparent 10%
+  );
+  z-index: -1; /* Push the pseudo-element behind other content */
+  animation: slideLines 20s linear infinite; /* Apply animation to the lines */
 }
 
-@keyframes App-logo-spin {
+/* Animation for the lines */
+@keyframes slideLines {
   from {
-    transform: rotate(0deg);
+    transform: translateX(-100%);
   }
   to {
-    transform: rotate(360deg);
+    transform: translateX(100%);
   }
+}
+
+.App-header {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: #333;
+}
+
+.App-logo {
+  height: 180px; /* Adjust logo height as needed */
+}
+
+.App-title {
+  margin-top: 20px; /* Margin for the title */
+}
+
+.Login-button {
+  margin-top: 20px; /* Margin for the login button */
+  padding: 10px 20px; /* Padding for the login button */
+  font-size: 16px; /* Font size for the login button */
+  background-color: #151617; /* Button background color */
+  color: white; /* Button text color */
+  border: none; /* Remove button border */
+  border-radius: 5px; /* Apply border radius */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  transition: background-color 0.3s ease; /* Smooth transition for background color */
+}
+
+.Login-button:hover {
+  background-color: #0056b3; /* Darker background color on hover */
 }

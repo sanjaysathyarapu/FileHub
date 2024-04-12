@@ -1,0 +1,19 @@
+.home {
+    display: flex;
+    flex-direction: column; /* Ensure content stacks vertically */
+}
+
+.home__content {
+    padding-top: 100px; /* Adjust based on navbar height */
+    /*margin-left: 80px;*/
+    width: 100%;
+    text-align: center;
+}
+
+.home h1 {
+    margin-bottom: 20px;
+}
+
+.home__activity {
+    /* Styles for user's past activity */
+}
