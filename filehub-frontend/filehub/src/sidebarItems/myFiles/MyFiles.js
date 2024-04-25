@@ -1,9 +1,9 @@
-import "./MyFiles.css";
+import { useAuth0 } from "@auth0/auth0-react";
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
 import Navbar from "../../navbar/Navbar";
 import Sidebar from "../../sidebar/Sidebar";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useAuth0 } from "@auth0/auth0-react";
+import "./MyFiles.css";
 
 // Modal component for sharing files
 const ShareModal = ({ isOpen, onClose, onShare, file }) => {
@@ -41,7 +41,11 @@ const MyFiles = () => {
     const [files, setFiles] = useState([]);
     const [shareModalOpen, setShareModalOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [uploadFile, setUploadFile] = useState(null);
     const { user } = useAuth0();
+    const fileInputRef = useRef(null);
+
+
 
     useEffect(() => {
         // Fetch files from backend API
@@ -74,6 +78,39 @@ const MyFiles = () => {
         // Then close the modal
         setShareModalOpen(false);
     };
+    const handleFileUploadClick = () => {
+        fileInputRef.current.click();
+    };
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+
+        const userMail = encodeURIComponent(user.email);
+        console.log("Here", user.email);
+        console.log("Type", typeof (userMail));
+        axios.post(`http://localhost:8080/file/${user.email}/upload/`, formData, {
+
+            // params: {
+            //     userEmail: (user.email) // Assuming `user.email` holds the email of the logged-in user
+            // },
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        })
+            .then(response => {
+                setFiles([...files, response.data]);
+                event.target.value = '';
+            })
+            .catch(error => {
+                console.error("Error uploading file:", error);
+            });
+    };
+
+
 
     return (
         <div className="home">
@@ -82,33 +119,41 @@ const MyFiles = () => {
             <div className="home__content">
                 <h1>My Files</h1>
                 <div className="upload-btn-container">
-                    <button className="upload-btn">Upload File</button>
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        style={{ display: 'none' }}
+                    />
+                    <button className="upload-btn" onClick={handleFileUploadClick}>
+                        Upload File
+                    </button>
                 </div>
                 <table className="file-table">
                     <thead>
-                    <tr>
-                        <th>File Name</th>
-                        <th>File Type</th>
-                        <th>Uploaded At</th>
-                        <th>Last Edited</th>
-                        <th>File Size</th>
-                        <th>Actions</th> {/* Added Actions column for share button */}
-                    </tr>
+                        <tr>
+                            <th>File Name</th>
+                            <th>File Type</th>
+                            <th>Uploaded At</th>
+                            <th>Last Edited</th>
+                            <th>File Size</th>
+                            <th>Actions</th> {/* Added Actions column for share button */}
+                        </tr>
                     </thead>
                     <tbody>
-                    {files.map(file => (
-                        <tr key={file.id}>
-                            <td><a href={file.fileURL}>{file.fileName}</a></td>
-                            <td>{file.fileType}</td>
-                            <td>{file.uploadedAt}</td>
-                            <td>{file.lastEditedAt}</td>
-                            <td>{file.fileSize}</td>
-                            <td>
-                                {/* Share button for each file */}
-                                <button className="share-btn" onClick={() => handleShareButtonClick(file)}>Share</button>
-                            </td>
-                        </tr>
-                    ))}
+                        {files.map(file => (
+                            <tr key={file.id}>
+                                <td><a href={file.fileURL}>{file.fileName}</a></td>
+                                <td>{file.fileType}</td>
+                                <td>{file.uploadedAt}</td>
+                                <td>{file.lastEditedAt}</td>
+                                <td>{file.fileSize}</td>
+                                <td>
+                                    {/* Share button for each file */}
+                                    <button className="share-btn" onClick={() => handleShareButtonClick(file)}>Share</button>
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
                 {/* ShareModal Component */}

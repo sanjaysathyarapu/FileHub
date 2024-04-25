@@ -1,12 +1,18 @@
 package com.example.FileHub.entity;
 
-import jakarta.persistence.*;
+import java.sql.Timestamp;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.sql.Timestamp;
 
 @Entity
 @Data
@@ -17,8 +23,8 @@ import java.sql.Timestamp;
 public class File {
 
     @Id
-    @Column(name = "id")
     @GeneratedValue
+    @Column(name = "id")
     private Long fileId;
 
     @Column(name = "fileName", unique = true, nullable = false)
@@ -41,4 +47,16 @@ public class File {
 
     @Column(name = "fileURL", unique = true, nullable = false)
     private String fileURL;
+
+    @PrePersist
+    protected void onCreate() {
+        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+        uploadedAt = currentTimestamp;
+        lastEditedAt = currentTimestamp;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        lastEditedAt = new Timestamp(System.currentTimeMillis());
+    }
 }
