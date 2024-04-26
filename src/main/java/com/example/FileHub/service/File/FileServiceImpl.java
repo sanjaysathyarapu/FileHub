@@ -1,6 +1,7 @@
 package com.example.FileHub.service.File;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.util.Optional;
 
@@ -55,8 +56,10 @@ public class FileServiceImpl implements FileService {
                 .build();
 
         try {
+            ByteBuffer fileByteBuffer = ByteBuffer.wrap(file.getBytes());
+            RequestBody requestBody = RequestBody.fromByteBuffer(fileByteBuffer);
 
-            s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+            s3Client.putObject(putObjectRequest, requestBody);
             File fileEntity = new File();
             fileEntity.setFileName(file.getOriginalFilename());
             fileEntity.setFileType(getFileExtension(file.getOriginalFilename()));

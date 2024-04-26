@@ -32,7 +32,6 @@ public class FileController {
     private final FileRepository fileRepository;
 
     @Autowired
-
     private FileService fileService;
 
     public FileController(UserRepository userRepository, FileRepository fileRepository, FileService fileService) {
