@@ -49,7 +49,6 @@ public class FileServiceImpl implements FileService {
         if (existingFile.isPresent()) {
             throw new IllegalStateException("File already exists for this user.");
         }
-
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(fileKey)

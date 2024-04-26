@@ -2,6 +2,8 @@ package com.example.FileHub.controller;
 
 import java.util.List;
 
+import com.example.FileHub.entity.SharedFile;
+import com.example.FileHub.service.File.SharingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -34,6 +36,9 @@ public class FileController {
     @Autowired
     private FileService fileService;
 
+    @Autowired
+    private SharingService sharingService;
+
     public FileController(UserRepository userRepository, FileRepository fileRepository, FileService fileService) {
         this.userRepository = userRepository;
         this.fileRepository = fileRepository;
@@ -49,7 +54,7 @@ public class FileController {
 
     @PostMapping(path = "{userEmail}/upload/", consumes = "multipart/form-data")
     public ResponseEntity<FileDTO> uploadFileToS3Bucket(@PathVariable("userEmail") String userEmail,
-            @RequestParam("file") MultipartFile file) {
+                                                        @RequestParam("file") MultipartFile file) {
         User user = userRepository.findByEmail(userEmail);
         FileDTO fileDTO = fileService.uploadToS3(user.getUserId(), file);
         return ResponseEntity.ok(fileDTO);
@@ -71,5 +76,17 @@ public class FileController {
             newUser.setEmail(userEmail);
             userRepository.save(newUser);
         }
+    }
+
+    @PostMapping("/{fileId}/share")
+    public ResponseEntity<?> shareFile(@PathVariable Long fileId, @RequestParam("userEmail") String userEmail) {
+        sharingService.shareFileWithUser(fileId, userEmail);
+        return ResponseEntity.ok("File shared successfully");
+    }
+
+    @GetMapping("/shared-with")
+    public ResponseEntity<List<SharedFile>> getFilesSharedWith(@RequestParam String userEmail) {
+        List<SharedFile> sharedFiles = sharingService.getAllFilesSharedWith(userEmail);
+        return ResponseEntity.ok(sharedFiles);
     }
 }

@@ -13,4 +13,5 @@ public interface FileRepository extends JpaRepository<File, Long> {
 
     Optional<File> getByFileNameAndUserId(String fileName, Long userId);
 
+    File findByFileId(Long fileId);
 }

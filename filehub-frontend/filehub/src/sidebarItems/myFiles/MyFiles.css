@@ -129,5 +129,13 @@
     color: white;
 }
 
-/* You may need additional styling based on your needs */
 
+.success-message {
+    color: green;
+    background-color: #ebffeb;
+    border: 1px solid green;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    text-align: center;
+}
