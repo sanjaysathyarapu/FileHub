@@ -1,0 +1,75 @@
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useAuth0 } from '@auth0/auth0-react';
+import Navbar from '../../navbar/Navbar';
+import Sidebar from '../../sidebar/Sidebar';
+import './SharedFiles.css';
+
+const SharedFiles = () => {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [sharedFiles, setSharedFiles] = useState(null); // Start with null to indicate not loaded
+    const { user, isLoading } = useAuth0();
+
+    useEffect(() => {
+        if (isLoading) {
+            return;
+        }
+
+        if (user?.email) {
+            axios.get("http://localhost:8080/file/shared-with", {
+                params: { userEmail: user.email }
+            })
+                .then(response => {
+                    setSharedFiles(response.data);
+                })
+                .catch(error => {
+                    console.error("Error fetching shared files:", error);
+                    setSharedFiles([]); // Set to empty array on error to show "no files" message
+                });
+        }
+    }, [user, isLoading]);
+
+    const toggleSidebar = () => {
+        setIsSidebarOpen(!isSidebarOpen);
+    };
+
+    return (
+        <div className="home">
+            <Navbar toggleSidebar={toggleSidebar} />
+            <Sidebar isOpen={isSidebarOpen} />
+            <div className="home__content">
+                <h1>Shared Files</h1>
+                {sharedFiles.length > 0 ? (
+                    <table className="file-table">
+                        <thead>
+                        <tr>
+                            <th>File Name</th>
+                            <th>File Type</th>
+                            <th>Uploaded At</th>
+                            <th>Last Edited</th>
+                            <th>File Size</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {sharedFiles.map(sharedFile => (
+                            <tr key={sharedFile.id}>
+                                <td><a href={sharedFile.file.fileURL} target="_blank" rel="noopener noreferrer">{sharedFile.file.fileName}</a></td>
+                                <td>{sharedFile.file.fileType}</td>
+                                <td>{new Date(sharedFile.file.uploadedAt).toLocaleString()}</td>
+                                <td>{new Date(sharedFile.file.lastEditedAt).toLocaleString()}</td>
+                                <td>{sharedFile.file.fileSize}</td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                ) : (
+                    <div>No files have been shared with you yet.</div>
+                )}
+            </div>
+        </div>
+    );
+
+};
+
+export default SharedFiles;
+
