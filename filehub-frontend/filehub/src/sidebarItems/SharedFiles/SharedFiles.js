@@ -7,7 +7,7 @@ import './SharedFiles.css';
 
 const SharedFiles = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [sharedFiles, setSharedFiles] = useState(null); // Start with null to indicate not loaded
+    const [sharedFiles, setSharedFiles] = useState([]);
     const { user, isLoading } = useAuth0();
 
     useEffect(() => {
@@ -24,7 +24,7 @@ const SharedFiles = () => {
                 })
                 .catch(error => {
                     console.error("Error fetching shared files:", error);
-                    setSharedFiles([]); // Set to empty array on error to show "no files" message
+                    setSharedFiles([]); // Maintain as an empty array
                 });
         }
     }, [user, isLoading]);
@@ -39,7 +39,7 @@ const SharedFiles = () => {
             <Sidebar isOpen={isSidebarOpen} />
             <div className="home__content">
                 <h1>Shared Files</h1>
-                {sharedFiles.length > 0 ? (
+                {sharedFiles && sharedFiles.length > 0 ? (
                     <table className="file-table">
                         <thead>
                         <tr>
@@ -62,14 +62,12 @@ const SharedFiles = () => {
                         ))}
                         </tbody>
                     </table>
-                ) : (
+                ) : !isLoading && (
                     <div>No files have been shared with you yet.</div>
                 )}
             </div>
         </div>
     );
-
 };
 
 export default SharedFiles;
-

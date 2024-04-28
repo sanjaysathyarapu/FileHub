@@ -71,6 +71,7 @@ public class FileServiceImpl implements FileService {
             fileRepository.save(fileEntity);
 
             FileDTO fileDTO = new FileDTO();
+            fileDTO.setFileId(fileEntity.getFileId());
             fileDTO.setFileName(fileEntity.getFileName());
             fileDTO.setFileType(fileEntity.getFileType());
             fileDTO.setFileSize(fileEntity.getFileSize());

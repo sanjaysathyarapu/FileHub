@@ -5,7 +5,7 @@ import Navbar from "../../navbar/Navbar";
 import Sidebar from "../../sidebar/Sidebar";
 import "./MyFiles.css";
 
-// Modal component for sharing files
+
 const ShareModal = ({ isOpen, onClose, onShare, file }) => {
     const [email, setEmail] = useState("");
 
@@ -73,24 +73,20 @@ const MyFiles = () => {
 
 
     const handleShare = (email, file) => {
-        // Prepare the URL with query parameters
         const url = `http://localhost:8080/file/${file.fileId}/share?userEmail=${encodeURIComponent(email)}`;
 
         // Make the API call
         axios.post(url)
             .then(response => {
                 console.log("File shared successfully:", response.data);
-                // Set the success message
                 setShareSuccessMessage(`File "${file.fileName}" shared successfully with ${email}.`);
-                // Optionally, set a timeout to clear the message after a few seconds
                 setTimeout(() => setShareSuccessMessage(''), 5000);
             })
             .catch(error => {
                 console.error("Error sharing file:", error);
-                // Optionally, show an error message to the user
             });
 
-        // Close the share modal
+
         setShareModalOpen(false);
     };
     const handleFileUploadClick = () => {
@@ -108,17 +104,18 @@ const MyFiles = () => {
         console.log("Here", user.email);
         console.log("Type", typeof (userMail));
         axios.post(`http://localhost:8080/file/${user.email}/upload/`, formData, {
-
-            // params: {
-            //     userEmail: (user.email) // Assuming `user.email` holds the email of the logged-in user
-            // },
             headers: {
                 "Content-Type": "multipart/form-data"
             }
         })
             .then(response => {
-                setFiles([...files, response.data]);
-                event.target.value = '';
+                const newFile = response.data;
+                setFiles(prevFiles => {
+                    // Return new state and use the callback to update selectedFile
+                    const updatedFiles = [...prevFiles, newFile];
+                    setSelectedFile(newFile); // Set the selected file to the new file
+                    return updatedFiles;
+                });
             })
             .catch(error => {
                 console.error("Error uploading file:", error);
@@ -185,4 +182,4 @@ const MyFiles = () => {
     );
 };
 
-    export default MyFiles;
+export default MyFiles;
