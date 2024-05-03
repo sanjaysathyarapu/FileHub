@@ -5,6 +5,8 @@ import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.util.Optional;
 
+import com.example.FileHub.entity.User;
+import com.example.FileHub.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +16,7 @@ import com.example.FileHub.dao.FileDTO;
 import com.example.FileHub.entity.File;
 import com.example.FileHub.repository.FileRepository;
 
+
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -22,18 +25,23 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 public class FileServiceImpl implements FileService {
     @Autowired
 
+
     private final FileRepository fileRepository;
     private final AwsProperties awsProperties;
     private final S3Client s3Client;
     private final String bucketName;
+
+    private final UserRepository userRepository;
+
     // private String bucketName = "mytestbucketforfileupload";
 
     @Autowired
-    public FileServiceImpl(FileRepository fileRepository, AwsProperties awsProperties, S3Client s3Client) {
+    public FileServiceImpl(FileRepository fileRepository, AwsProperties awsProperties, S3Client s3Client, UserRepository userRepository) {
         this.fileRepository = fileRepository;
         this.awsProperties = awsProperties;
         this.s3Client = s3Client;
         this.bucketName = awsProperties.getBucketName();
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -69,6 +77,11 @@ public class FileServiceImpl implements FileService {
             fileEntity.setUploadedAt(currentTimestamp);
             fileEntity.setLastEditedAt(currentTimestamp);
             fileRepository.save(fileEntity);
+
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
+            user.setNoOfFilesUploaded(user.getNoOfFilesUploaded() + 1);
+            userRepository.save(user);
 
             FileDTO fileDTO = new FileDTO();
             fileDTO.setFileId(fileEntity.getFileId());

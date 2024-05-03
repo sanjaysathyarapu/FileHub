@@ -22,4 +22,11 @@ public class User {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
+    @Column(name = "noOfFilesUploaded", nullable = false)
+    private Integer noOfFilesUploaded = 0;
+
+    @Column(name = "noOfFilesShared", nullable = false)
+    private Integer noOfFilesShared = 0;
+
+
 }

@@ -1,10 +1,15 @@
 package com.example.FileHub.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.example.FileHub.dao.UserStatsDTO;
 import com.example.FileHub.entity.SharedFile;
 import com.example.FileHub.service.File.SharingService;
 import org.springframework.beans.factory.annotation.Autowired;
+
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -89,4 +94,32 @@ public class FileController {
         List<SharedFile> sharedFiles = sharingService.getAllFilesSharedWith(userEmail);
         return ResponseEntity.ok(sharedFiles);
     }
+
+
+//    @GetMapping("/user/{userId}/stats")
+//    public ResponseEntity<Map<String, Integer>> getUserStats(@PathVariable Long userId) {
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+//
+//        Map<String, Integer> stats = new HashMap<>();
+//        stats.put("noOfFilesUploaded", user.getNoOfFilesUploaded());
+//        stats.put("noOfFilesShared", user.getNoOfFilesShared());
+//
+//        return ResponseEntity.ok(stats);
+//    }
+
+    @GetMapping("/user/stats")
+    public ResponseEntity<Map<String, Integer>> getUserStats(@RequestParam String email) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+
+        Map<String, Integer> stats = new HashMap<>();
+        stats.put("noOfFilesUploaded", user.getNoOfFilesUploaded());
+        stats.put("noOfFilesShared", user.getNoOfFilesShared());
+
+        return ResponseEntity.ok(stats);
+    }
+
 }

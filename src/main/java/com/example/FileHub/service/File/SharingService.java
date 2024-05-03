@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+
+
 @Service
 public class SharingService {
 
@@ -34,6 +36,10 @@ public class SharingService {
         if (file == null) {
             throw new IllegalArgumentException("File not found");
         }
+        Long userId = file.getUserId();
+        User owner = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
         User sharedWith = userRepository.findByEmail(sharedWithEmail);
         if (sharedWith == null) {
             throw new IllegalArgumentException("User not found");
@@ -43,5 +49,12 @@ public class SharingService {
         sharedFile.setOwner(userRepository.findByUserId(file.getUserId()));
         sharedFile.setSharedWith(sharedWith);
         sharedFileRepository.save(sharedFile);
+
+        owner.setNoOfFilesShared(owner.getNoOfFilesShared() + 1);
+        userRepository.save(owner);
+
+
+
+
     }
 }
