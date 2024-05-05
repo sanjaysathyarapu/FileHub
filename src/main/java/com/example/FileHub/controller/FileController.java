@@ -11,13 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.FileHub.dao.FileDTO;
@@ -120,6 +114,17 @@ public class FileController {
         stats.put("noOfFilesShared", user.getNoOfFilesShared());
 
         return ResponseEntity.ok(stats);
+    }
+
+    @DeleteMapping("/{userEmail}/{fileId}")
+    public ResponseEntity<String> deleteFile(@PathVariable("userEmail") String userEmail,
+                                             @PathVariable Long fileId) {
+        User user = userRepository.findByEmail(userEmail);
+        if (user == null) {
+            return ResponseEntity.status(404).body("User not found");
+        }
+        fileService.deleteFromS3(user.getUserId(), fileId);
+        return ResponseEntity.ok("File deleted successfully");
     }
 
 }

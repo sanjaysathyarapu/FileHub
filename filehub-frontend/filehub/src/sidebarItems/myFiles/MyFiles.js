@@ -5,7 +5,6 @@ import Navbar from "../../navbar/Navbar";
 import Sidebar from "../../sidebar/Sidebar";
 import "./MyFiles.css";
 
-
 const ShareModal = ({ isOpen, onClose, onShare, file }) => {
     const [email, setEmail] = useState("");
 
@@ -41,17 +40,16 @@ const MyFiles = () => {
     const [files, setFiles] = useState([]);
     const [shareModalOpen, setShareModalOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
-    const [uploadFile, setUploadFile] = useState(null);
-    const {user} = useAuth0();
-    const fileInputRef = useRef(null);
     const [shareSuccessMessage, setShareSuccessMessage] = useState('');
-
+    const [deleteSuccessMessage, setDeleteSuccessMessage] = useState('');
+    const { user } = useAuth0();
+    const fileInputRef = useRef(null);
 
     useEffect(() => {
         // Fetch files from backend API
         axios.get("http://localhost:8080/file/all", {
             params: {
-                userEmail: user.email // Assuming `user.email` holds the email of the logged-in user
+                userEmail: user.email
             }
         })
             .then(response => {
@@ -60,7 +58,7 @@ const MyFiles = () => {
             .catch(error => {
                 console.error("Error fetching files:", error);
             });
-    }, [user.email]); // Dependency array includes user.email to refetch when it changes
+    }, [user.email]);
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
@@ -71,11 +69,9 @@ const MyFiles = () => {
         setShareModalOpen(true);
     };
 
-
     const handleShare = (email, file) => {
         const url = `http://localhost:8080/file/${file.fileId}/share?userEmail=${encodeURIComponent(email)}`;
 
-        // Make the API call
         axios.post(url)
             .then(response => {
                 console.log("File shared successfully:", response.data);
@@ -86,12 +82,13 @@ const MyFiles = () => {
                 console.error("Error sharing file:", error);
             });
 
-
         setShareModalOpen(false);
     };
+
     const handleFileUploadClick = () => {
         fileInputRef.current.click();
     };
+
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (!file) return;
@@ -99,10 +96,6 @@ const MyFiles = () => {
         const formData = new FormData();
         formData.append("file", file);
 
-
-        const userMail = encodeURIComponent(user.email);
-        console.log("Here", user.email);
-        console.log("Type", typeof (userMail));
         axios.post(`http://localhost:8080/file/${user.email}/upload/`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data"
@@ -111,9 +104,8 @@ const MyFiles = () => {
             .then(response => {
                 const newFile = response.data;
                 setFiles(prevFiles => {
-                    // Return new state and use the callback to update selectedFile
                     const updatedFiles = [...prevFiles, newFile];
-                    setSelectedFile(newFile); // Set the selected file to the new file
+                    setSelectedFile(newFile);
                     return updatedFiles;
                 });
             })
@@ -122,11 +114,22 @@ const MyFiles = () => {
             });
     };
 
+    const handleDelete = (fileId) => {
+        axios.delete(`http://localhost:8080/file/${user.email}/${fileId}`)
+            .then(() => {
+                setFiles(files.filter(file => file.fileId !== fileId));
+                setDeleteSuccessMessage('File deleted successfully.');
+                setTimeout(() => setDeleteSuccessMessage(''), 5000);
+            })
+            .catch(error => {
+                console.error("Error deleting file:", error);
+            });
+    };
 
     return (
         <div className="home">
-            <Navbar toggleSidebar={toggleSidebar}/>
-            <Sidebar isOpen={isSidebarOpen}/>
+            <Navbar toggleSidebar={toggleSidebar} />
+            <Sidebar isOpen={isSidebarOpen} />
             <div className="home__content">
                 <h1>My Files</h1>
                 <div className="upload-btn-container">
@@ -134,14 +137,14 @@ const MyFiles = () => {
                         type="file"
                         ref={fileInputRef}
                         onChange={handleFileChange}
-                        style={{display: 'none'}}
+                        style={{ display: 'none' }}
                     />
                     <button className="upload-btn" onClick={handleFileUploadClick}>
                         Upload File
                     </button>
                 </div>
-                {/* Display success message */}
                 {shareSuccessMessage && <div className="success-message">{shareSuccessMessage}</div>}
+                {deleteSuccessMessage && <div className="success-message">{deleteSuccessMessage}</div>}
                 <table className="file-table">
                     <thead>
                     <tr>
@@ -162,8 +165,8 @@ const MyFiles = () => {
                             <td>{file.lastEditedAt}</td>
                             <td>{file.fileSize}</td>
                             <td>
-                                <button className="share-btn" onClick={() => handleShareButtonClick(file)}>Share
-                                </button>
+                                <button className="share-btn" onClick={() => handleShareButtonClick(file)}>Share</button>
+                                <button className="delete-btn" onClick={() => handleDelete(file.fileId)}>Delete</button>
                             </td>
                         </tr>
                     ))}

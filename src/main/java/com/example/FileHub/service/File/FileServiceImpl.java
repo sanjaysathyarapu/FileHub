@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.util.Optional;
 
 import com.example.FileHub.entity.User;
+import com.example.FileHub.repository.SharedFileRepository;
 import com.example.FileHub.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import com.example.FileHub.repository.FileRepository;
 
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Service
@@ -27,6 +29,7 @@ public class FileServiceImpl implements FileService {
 
 
     private final FileRepository fileRepository;
+    private final SharedFileRepository sharedFileRepository;
     private final AwsProperties awsProperties;
     private final S3Client s3Client;
     private final String bucketName;
@@ -36,12 +39,13 @@ public class FileServiceImpl implements FileService {
     // private String bucketName = "mytestbucketforfileupload";
 
     @Autowired
-    public FileServiceImpl(FileRepository fileRepository, AwsProperties awsProperties, S3Client s3Client, UserRepository userRepository) {
+    public FileServiceImpl(FileRepository fileRepository, AwsProperties awsProperties, S3Client s3Client, UserRepository userRepository,SharedFileRepository sharedFileRepository) {
         this.fileRepository = fileRepository;
         this.awsProperties = awsProperties;
         this.s3Client = s3Client;
         this.bucketName = awsProperties.getBucketName();
         this.userRepository = userRepository;
+        this.sharedFileRepository = sharedFileRepository;
     }
 
     @Override
@@ -98,6 +102,47 @@ public class FileServiceImpl implements FileService {
             throw new RuntimeException("Failed to upload file", e);
         }
     }
+
+    @Override
+    public void deleteFromS3(Long userId, Long fileId) {
+
+        File fileEntity = fileRepository.findById(fileId)
+                .orElseThrow(() -> new IllegalArgumentException("File not found"));
+
+
+        if (!fileEntity.getUserId().equals(userId)) {
+            throw new SecurityException("User not authorized to delete this file");
+        }
+
+
+        if (sharedFileRepository.existsByFile(fileEntity)) {
+            try {
+                sharedFileRepository.deleteByFile(fileEntity);
+            } catch (Exception e) {
+
+                System.out.println("Failed to delete from shared files table: " + e.getMessage());
+            }
+        }
+
+
+        String fileKey = userId + "/" + fileEntity.getFileName();
+        DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                .bucket(bucketName)
+                .key(fileKey)
+                .build();
+        s3Client.deleteObject(deleteObjectRequest);
+
+
+        fileRepository.deleteById(fileId);
+
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        user.setNoOfFilesUploaded(user.getNoOfFilesUploaded() - 1);
+        userRepository.save(user);
+    }
+
+
 
     private String getFileExtension(String fileName) {
         return fileName.substring(fileName.lastIndexOf('.') + 1);
