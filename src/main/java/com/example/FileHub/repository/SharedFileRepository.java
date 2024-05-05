@@ -16,8 +16,7 @@ import java.util.List;
 public interface SharedFileRepository extends JpaRepository<SharedFile, Long> {
     @Query("SELECT sf FROM SharedFile sf WHERE sf.sharedWith.email = :email")
     List<SharedFile> findAllSharedWith(@Param("email") String email);
-
     void deleteByFile(File file);
-
     boolean existsByFile(File file);
+    List<SharedFile> findAllByFile(File file);
 }

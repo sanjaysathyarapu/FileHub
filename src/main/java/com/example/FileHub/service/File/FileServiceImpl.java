@@ -108,37 +108,30 @@ public class FileServiceImpl implements FileService {
 
         File fileEntity = fileRepository.findById(fileId)
                 .orElseThrow(() -> new IllegalArgumentException("File not found"));
-
-
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
         if (!fileEntity.getUserId().equals(userId)) {
             throw new SecurityException("User not authorized to delete this file");
         }
-
-
         if (sharedFileRepository.existsByFile(fileEntity)) {
             try {
+                int cnt = sharedFileRepository.findAllByFile(fileEntity).size();
                 sharedFileRepository.deleteByFile(fileEntity);
+                if(user.getNoOfFilesShared() >= cnt)
+                    user.setNoOfFilesShared(user.getNoOfFilesShared() - cnt);
             } catch (Exception e) {
-
                 System.out.println("Failed to delete from shared files table: " + e.getMessage());
             }
         }
-
-
         String fileKey = userId + "/" + fileEntity.getFileName();
         DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
                 .bucket(bucketName)
                 .key(fileKey)
                 .build();
         s3Client.deleteObject(deleteObjectRequest);
-
-
         fileRepository.deleteById(fileId);
-
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        user.setNoOfFilesUploaded(user.getNoOfFilesUploaded() - 1);
+        if(user.getNoOfFilesUploaded() > 0)
+            user.setNoOfFilesUploaded(user.getNoOfFilesUploaded() - 1);
         userRepository.save(user);
     }
 
