@@ -28,6 +28,8 @@ dependencies {
 //	implementation 'org.springframework.security:spring-security-config'
 //	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 //	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+	implementation 'software.amazon.awssdk:s3:2.17.100'
+	implementation 'software.amazon.awssdk:s3:2.17.100'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	runtimeOnly 'com.microsoft.sqlserver:mssql-jdbc'
