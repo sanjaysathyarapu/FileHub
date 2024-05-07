@@ -1,14 +1,24 @@
 package com.example.FileHub.service.File;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.Optional;
 
+
+import com.aspose.words.Document;
+import com.aspose.words.HtmlSaveOptions;
+import com.aspose.words.SaveFormat;
+import com.example.FileHub.entity.User;
+import org.apache.commons.io.FileUtils;
 import com.example.FileHub.entity.User;
 import com.example.FileHub.repository.SharedFileRepository;
 import com.example.FileHub.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -57,13 +67,14 @@ public class FileServiceImpl implements FileService {
         String fileName = file.getOriginalFilename();
         String fileKey = userId + "/" + file.getOriginalFilename();
 
-        Optional<File> existingFile = fileRepository.getByFileNameAndUserId(fileName, userId);
-        if (existingFile.isPresent()) {
-            throw new IllegalStateException("File already exists for this user.");
-        }
+
+
+        String contentType = determineContentType(fileName);
+
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(fileKey)
+                .contentType(contentType)
                 .build();
 
         try {
@@ -71,30 +82,41 @@ public class FileServiceImpl implements FileService {
             RequestBody requestBody = RequestBody.fromByteBuffer(fileByteBuffer);
 
             s3Client.putObject(putObjectRequest, requestBody);
+
+
             File fileEntity = new File();
-            fileEntity.setFileName(file.getOriginalFilename());
-            fileEntity.setFileType(getFileExtension(file.getOriginalFilename()));
-            fileEntity.setFileSize(String.valueOf(file.getSize()));
-            fileEntity.setFileURL("https://" + bucketName + ".s3.amazonaws.com/" + fileKey);
-            fileEntity.setUserId(userId);
             Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-            fileEntity.setUploadedAt(currentTimestamp);
-            fileEntity.setLastEditedAt(currentTimestamp);
-            fileRepository.save(fileEntity);
-
-            User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
-            user.setNoOfFilesUploaded(user.getNoOfFilesUploaded() + 1);
-            userRepository.save(user);
-
             FileDTO fileDTO = new FileDTO();
-            fileDTO.setFileId(fileEntity.getFileId());
-            fileDTO.setFileName(fileEntity.getFileName());
-            fileDTO.setFileType(fileEntity.getFileType());
-            fileDTO.setFileSize(fileEntity.getFileSize());
-            fileDTO.setFileURL(fileEntity.getFileURL());
-            fileDTO.setUploadedAt(fileEntity.getUploadedAt());
-            fileDTO.setLastEditedAt(currentTimestamp);
+
+
+            Optional<File> existingFile = fileRepository.getByFileNameAndUserId(fileName, userId);
+            if (existingFile.isPresent()) {
+                existingFile.get().setLastEditedAt(currentTimestamp);
+                existingFile.get().setFileURL("https://dxkn0p0al1ucf.cloudfront.net/"+fileKey);
+                fileRepository.save(existingFile.get());
+            } else {
+                fileEntity.setFileName(file.getOriginalFilename());
+                fileEntity.setFileType(getFileExtension(file.getOriginalFilename()));
+                fileEntity.setFileSize(String.valueOf(file.getSize()));
+                fileEntity.setFileURL("https://dxkn0p0al1ucf.cloudfront.net/"+ fileKey);
+                fileEntity.setUserId(userId);
+                fileEntity.setUploadedAt(currentTimestamp);
+                fileEntity.setLastEditedAt(currentTimestamp);
+                fileRepository.save(fileEntity);
+
+                User user = userRepository.findById(userId)
+                        .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                user.setNoOfFilesUploaded(user.getNoOfFilesUploaded() + 1);
+                userRepository.save(user);
+
+                fileDTO.setFileId(fileEntity.getFileId());
+                fileDTO.setFileName(fileEntity.getFileName());
+                fileDTO.setFileType(fileEntity.getFileType());
+                fileDTO.setFileSize(fileEntity.getFileSize());
+                fileDTO.setFileURL(fileEntity.getFileURL());
+                fileDTO.setUploadedAt(fileEntity.getUploadedAt());
+                fileDTO.setLastEditedAt(currentTimestamp);
+            }
 
             return fileDTO;
 
@@ -140,5 +162,79 @@ public class FileServiceImpl implements FileService {
     private String getFileExtension(String fileName) {
         return fileName.substring(fileName.lastIndexOf('.') + 1);
     }
+
+    private String determineContentType(String fileName) {
+        String fileExtension = getFileExtension(fileName);
+        if (fileExtension.equalsIgnoreCase("pdf")) {
+            return "application/pdf";
+        } else if (fileExtension.equalsIgnoreCase("docx")) {
+            return "application/msword";
+        } else {
+            return "application/octet-stream";
+        }
+    }
+
+    @Override
+    public MultipartFile convertFileToMultipartFile(java.io.File file) throws IOException {
+        FileInputStream fileInputStream = new FileInputStream(file);
+        return new MockMultipartFile(
+                file.getName(),      // Name of the file
+                file.getName(),      // Original filename
+                "application/msword",  // Content type
+                fileInputStream     // InputStream containing file content
+        );
+    }
+
+    @Override
+    public String convertDocxToHtmlFromUrl(String cloudFrontUrl) {
+        try {
+            // Load the document from the CloudFront URL
+
+            URL wordUrl = new URL(cloudFrontUrl);
+            java.io.File wordFile = new java.io.File("src/main/resources/public/files/wordTemp.docx");
+            FileUtils.copyURLToFile(wordUrl, wordFile);
+
+            Document doc = new Document(wordFile.getAbsolutePath());
+
+            HtmlSaveOptions htmlSaveOptions = new HtmlSaveOptions();
+            htmlSaveOptions.setExportImagesAsBase64(true);
+
+            java.io.File tempHtmlFile = java.io.File.createTempFile("temp", ".html");
+            doc.save(tempHtmlFile.getAbsolutePath(), htmlSaveOptions);
+
+//            doc.save("wordToHTML.html", SaveFormat.HTML);
+
+
+            // Return the HTML content
+            return FileUtils.readFileToString(tempHtmlFile, StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error converting DOCX to HTML";
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> convertHTMLToDOCX(String htmlContent, Long fileId) {
+        Optional<File> file = fileRepository.findById(fileId);
+
+        try {
+            // Load HTML content into a Document
+            Document doc = new Document(new ByteArrayInputStream(htmlContent.getBytes(StandardCharsets.UTF_8)));
+
+            java.io.File docxFile = new java.io.File("src/main/resources/public/files/edited/" + file.get().getFileName());
+
+
+            // Save the Document as a DOCX file
+            doc.save(docxFile.getAbsolutePath(), SaveFormat.DOCX);
+            MultipartFile multipartFile = convertFileToMultipartFile(docxFile);
+            uploadToS3(file.get().getUserId(), multipartFile);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok("Successfully saved");
+    }
+
 
 }

@@ -1,6 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom"; // Import Link component for navigation
 import Navbar from "../../navbar/Navbar";
 import Sidebar from "../../sidebar/Sidebar";
 import "./MyFiles.css";
@@ -40,11 +41,13 @@ const MyFiles = () => {
     const [files, setFiles] = useState([]);
     const [shareModalOpen, setShareModalOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
-    const [shareSuccessMessage, setShareSuccessMessage] = useState('');
+    const [uploadFile, setUploadFile] = useState(null);
     const [deleteSuccessMessage, setDeleteSuccessMessage] = useState('');
     const [uploadSuccessMessage, setUploadSuccessMessage] = useState('');
     const {user} = useAuth0();
     const fileInputRef = useRef(null);
+    const [shareSuccessMessage, setShareSuccessMessage] = useState('');
+    const [pdfViewModalOpen, setPdfViewModalOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalContent, setModalContent] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -58,12 +61,13 @@ const MyFiles = () => {
             }
         })
             .then(response => {
+                console.log(response);
                 setFiles(response.data);
             })
             .catch(error => {
                 console.error("Error fetching files:", error);
             });
-    }, [user.email]);
+    }, [user.email]); // Dependency array includes user.email to refetch when it changes
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
@@ -73,6 +77,12 @@ const MyFiles = () => {
         setSelectedFile(file);
         setShareModalOpen(true);
     };
+
+    const handlePdfView = (file) => {
+        setSelectedFile(file);
+        setPdfViewModalOpen(true);
+    };
+
 
     const handleShare = (email, file) => {
         const url = `http://localhost:8080/file/${file.fileId}/share?userEmail=${encodeURIComponent(email)}`;
@@ -209,7 +219,8 @@ const MyFiles = () => {
                     <tbody>
                     {files.map(file => (
                         <tr key={file.id}>
-                            <td><a href={file.fileURL}>{file.fileName}</a></td>
+                             { file.fileType === "pdf" ? <td><Link to={`/view/pdf/${file.fileId}`}>{file.fileName}</Link></td> :
+                            <td><Link to={`/edit/${file.fileId}`}>{file.fileName}</Link></td> }
                             <td>{file.fileType}</td>
                             <td>{file.uploadedAt}</td>
                             <td>{file.lastEditedAt}</td>
@@ -240,5 +251,6 @@ const MyFiles = () => {
             </div>
         </div>
     );
-}
-    export default MyFiles;
+};
+
+export default MyFiles;

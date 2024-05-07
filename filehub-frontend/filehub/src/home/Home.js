@@ -11,6 +11,7 @@ const Home = () => {
     const [userStats, setUserStats] = useState({ noOfFilesUploaded: 0, noOfFilesShared: 0 });
     const { user, isAuthenticated } = useAuth0();
 
+
     useEffect(() => {
         const fetchUserStats = async () => {
             try {
