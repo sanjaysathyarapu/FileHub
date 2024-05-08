@@ -4,6 +4,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import Navbar from '../../navbar/Navbar';
 import Sidebar from '../../sidebar/Sidebar';
 import './SharedFiles.css';
+import {Link} from "react-router-dom";
 
 const SharedFiles = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -53,7 +54,10 @@ const SharedFiles = () => {
                         <tbody>
                         {sharedFiles.map(sharedFile => (
                             <tr key={sharedFile.id}>
-                                <td><a href={sharedFile.file.fileURL} target="_blank" rel="noopener noreferrer">{sharedFile.file.fileName}</a></td>
+                                {sharedFile.file.fileType === "pdf" ?
+                                    <td><Link to={`/view/pdf/${sharedFile.file.fileId}`}>{sharedFile.file.fileName}</Link></td> :
+                                    <td><Link to={`/edit/${sharedFile.file.fileId}`}>{sharedFile.file.fileName}</Link></td>
+                                }
                                 <td>{sharedFile.file.fileType}</td>
                                 <td>{new Date(sharedFile.file.uploadedAt).toLocaleString()}</td>
                                 <td>{new Date(sharedFile.file.lastEditedAt).toLocaleString()}</td>
