@@ -3,11 +3,12 @@ version: 0.2
 phases:
   install:
     commands:
-      # Remove any existing Java versions (optional, based on your needs)
-      - yum remove -y java*
-      # Download and install Amazon Corretto 17
-      - curl -L https://corretto.aws/downloads/latest/amazon-corretto-17-x64-linux-jdk.rpm -o corretto-17.rpm
-      - yum install -y ./corretto-17.rpm
+      # Check Java installations
+      - ls /usr/lib/jvm/
+      # Add Java 17 to alternatives if not already configured
+      - alternatives --install /usr/bin/java java /usr/lib/jvm/java-17-amazon-corretto.x86_64/bin/java 2
+      - alternatives --install /usr/bin/javac javac /usr/lib/jvm/java-17-amazon-corretto.x86_64/bin/javac 2
+      # Set Java 17 as the default
       - alternatives --set java /usr/lib/jvm/java-17-amazon-corretto.x86_64/bin/java
       - alternatives --set javac /usr/lib/jvm/java-17-amazon-corretto.x86_64/bin/javac
       - echo Checking Java and Gradle versions
