@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.example.FileHub.dao.UserStatsDTO;
 import com.example.FileHub.entity.SharedFile;
@@ -59,7 +60,14 @@ public class FileController {
     public List<File> getAllFiles(@RequestParam("userEmail") String userEmail) {
         signUpIfUserDoesNotExist(userEmail);
         User user = userRepository.findByEmail(userEmail);
-        return fileRepository.findFilesByUserId(user.getUserId());
+        List<File> allFiles = fileRepository.findFilesByUserId(user.getUserId());
+
+        // Filter out files with "CONVERTED" in their names
+        List<File> filteredFiles = allFiles.stream()
+                .filter(file -> !file.getFileName().contains("CONVERTED"))
+                .collect(Collectors.toList());
+
+        return filteredFiles;
     }
 
     @GetMapping("/{fileId}")
@@ -169,8 +177,8 @@ public class FileController {
             MultipartFile multipartFile = fileService.convertFileToMultipartFile(docxFile);
 
 
-            fileService.uploadToS3(file.get().getUserId(), multipartFile);
-            return new ResponseEntity<>("Conversion successful and file uploaded to filehub", HttpStatus.OK);
+            String url = fileService.uploadToS3(file.get().getUserId(), multipartFile).getFileURL();
+            return new ResponseEntity<>(url, HttpStatus.OK);
 
         } catch (Exception e) {
             e.printStackTrace();

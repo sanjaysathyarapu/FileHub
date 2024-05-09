@@ -5,6 +5,7 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -94,6 +95,14 @@ public class FileServiceImpl implements FileService {
                 existingFile.get().setLastEditedAt(currentTimestamp);
                 existingFile.get().setFileURL("https://d2xljye1gyge28.cloudfront.net/"+fileKey);
                 fileRepository.save(existingFile.get());
+
+                fileDTO.setFileId(existingFile.get().getFileId());
+                fileDTO.setFileName(existingFile.get().getFileName());
+                fileDTO.setFileType(existingFile.get().getFileType());
+                fileDTO.setFileSize(existingFile.get().getFileSize());
+                fileDTO.setFileURL( existingFile.get().getFileURL());
+                fileDTO.setUploadedAt(existingFile.get().getUploadedAt());
+                fileDTO.setLastEditedAt(currentTimestamp);
             } else {
                 fileEntity.setFileName(file.getOriginalFilename());
                 fileEntity.setFileType(getFileExtension(file.getOriginalFilename()));
@@ -168,7 +177,7 @@ public class FileServiceImpl implements FileService {
         if (fileExtension.equalsIgnoreCase("pdf")) {
             return "application/pdf";
         } else if (fileExtension.equalsIgnoreCase("docx")) {
-            return "application/msword";
+            return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
         } else {
             return "application/octet-stream";
         }
@@ -180,7 +189,7 @@ public class FileServiceImpl implements FileService {
         return new MockMultipartFile(
                 file.getName(),      // Name of the file
                 file.getName(),      // Original filename
-                "application/msword",  // Content type
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",  // Content type
                 fileInputStream     // InputStream containing file content
         );
     }

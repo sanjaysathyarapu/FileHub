@@ -34,8 +34,9 @@ const PDFFileViewer = () => {
         axios.post(`http://localhost:8080/file/convert/pdf-to-docx/${fileId}`)
             .then(response => {
                 console.log(response.data);
-                window.alert(response.data);
+                // window.alert(response.data);
                 setIsConverting(false);
+                window.location.href = response.data;
             })
             .catch(error => {
                 console.error(error);
