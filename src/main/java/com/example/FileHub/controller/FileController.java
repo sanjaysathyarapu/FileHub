@@ -72,6 +72,7 @@ public class FileController {
     @PostMapping(path = "{userEmail}/upload/", consumes = "multipart/form-data")
     public ResponseEntity<FileDTO> uploadFileToS3Bucket(@PathVariable("userEmail") String userEmail,
                                                         @RequestParam("file") MultipartFile file) {
+        signUpIfUserDoesNotExist(userEmail);
         User user = userRepository.findByEmail(userEmail);
         FileDTO fileDTO = fileService.uploadToS3(user.getUserId(), file);
         return ResponseEntity.ok(fileDTO);
@@ -97,6 +98,7 @@ public class FileController {
 
     @PostMapping("/{fileId}/share")
     public ResponseEntity<?> shareFile(@PathVariable Long fileId, @RequestParam("userEmail") String userEmail) {
+        signUpIfUserDoesNotExist(userEmail);
         sharingService.shareFileWithUser(fileId, userEmail);
         return ResponseEntity.ok("File shared successfully");
     }
@@ -122,6 +124,7 @@ public class FileController {
 
     @GetMapping("/user/stats")
     public ResponseEntity<Map<String, Integer>> getUserStats(@RequestParam String email) {
+        signUpIfUserDoesNotExist(email);
         User user = userRepository.findByEmail(email);
         if (user == null) {
             throw new IllegalArgumentException("User not found");
