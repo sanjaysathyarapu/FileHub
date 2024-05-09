@@ -92,13 +92,13 @@ public class FileServiceImpl implements FileService {
             Optional<File> existingFile = fileRepository.getByFileNameAndUserId(fileName, userId);
             if (existingFile.isPresent()) {
                 existingFile.get().setLastEditedAt(currentTimestamp);
-                existingFile.get().setFileURL("https://dxkn0p0al1ucf.cloudfront.net/"+fileKey);
+                existingFile.get().setFileURL("https://d2xljye1gyge28.cloudfront.net/"+fileKey);
                 fileRepository.save(existingFile.get());
             } else {
                 fileEntity.setFileName(file.getOriginalFilename());
                 fileEntity.setFileType(getFileExtension(file.getOriginalFilename()));
                 fileEntity.setFileSize(String.valueOf(file.getSize()));
-                fileEntity.setFileURL("https://dxkn0p0al1ucf.cloudfront.net/"+ fileKey);
+                fileEntity.setFileURL("https://d2xljye1gyge28.cloudfront.net/"+ fileKey);
                 fileEntity.setUserId(userId);
                 fileEntity.setUploadedAt(currentTimestamp);
                 fileEntity.setLastEditedAt(currentTimestamp);
