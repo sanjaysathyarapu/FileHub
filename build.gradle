@@ -37,8 +37,8 @@ dependencies {
 	implementation 'org.apache.pdfbox:pdfbox:3.0.2'
 	implementation 'e-iceblue:spire.pdf:10.3.1'
 	implementation 'org.springframework:spring-test:5.2.8.RELEASE'
-	implementation 'com.aspose:aspose-words:22.11:jdk17'
-	implementation 'com.aspose:aspose-words:22.11:javadoc'
+	implementation 'com.aspose:aspose-words:24.4:jdk17'
+	implementation 'com.aspose:aspose-words:24.4:javadoc'
 
 //	compile(group: 'com.aspose', name: 'aspose-words', version: '24.4', classifier: 'jdk17')
 

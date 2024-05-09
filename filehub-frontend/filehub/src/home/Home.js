@@ -5,12 +5,21 @@ import Navbar from '../navbar/Navbar';
 import Sidebar from '../sidebar/Sidebar';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import './Home.css';
+import FeaturesBlock from "../featureBlock/FeaturesBlock";
 
 const Home = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [userStats, setUserStats] = useState({ noOfFilesUploaded: 0, noOfFilesShared: 0 });
     const { user, isAuthenticated } = useAuth0();
 
+    const features = [
+        { image: '/images/upload.png', text: 'Upload/Delete files' },
+        { image: '/images/icons8-share-96.png', text: 'Share Files with other registered users' },
+        { image: '/images/summary.png', text: 'Document Summarization' },
+        { image: '/images/icons8-edit-file-96.png', text: 'Edit word files' },
+        { image: '/images/icons8-pdf-96.png', text: 'View PDF files' },
+        { image: '/images/icons8-compare-96.png', text: 'Convert DPF files to .docx files' },
+    ];
 
     useEffect(() => {
         const fetchUserStats = async () => {
@@ -62,9 +71,12 @@ const Home = () => {
                         <Bar dataKey="count" fill="#8884d8" />
                     </BarChart>
                 </div>
+                <FeaturesBlock features={features} />
             </div>
         </div>
     );
 };
+
+
 
 export default Home;
