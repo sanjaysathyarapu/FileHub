@@ -2,20 +2,29 @@ version: 0.2
 
 phases:
   install:
-    runtime-versions:
-      java: corretto17
     commands:
+      # Remove any existing Java versions (optional, based on your needs)
+      - yum remove -y java*
+      # Download and install Amazon Corretto 17
+      - curl -L https://corretto.aws/downloads/latest/amazon-corretto-17-x64-linux-jdk.rpm -o corretto-17.rpm
+      - yum install -y ./corretto-17.rpm
+      - alternatives --set java /usr/lib/jvm/java-17-amazon-corretto.x86_64/bin/java
+      - alternatives --set javac /usr/lib/jvm/java-17-amazon-corretto.x86_64/bin/javac
       - echo Checking Java and Gradle versions
       - java -version
       - chmod +x ./gradlew
       - ./gradlew -v
+
   build:
     commands:
+      - echo Build started on `date`
       - ./gradlew build
+
   post_build:
     commands:
-      - echo Build completed
+      - echo Build completed on `date`
+
 artifacts:
   files:
-    - target/*.jar
+    - build/libs/*.jar
   discard-paths: yes
