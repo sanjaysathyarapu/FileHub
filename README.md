@@ -1,4 +1,4 @@
-# FileHub
+# FileHub App
 
 ## commands to run the assistant API
 
