@@ -108,6 +108,9 @@ const MyFiles = () => {
         const file = event.target.files[0];
         if (!file) return;
 
+        setIsLoading(true);
+
+
         const formData = new FormData();
         formData.append("file", file);
 
@@ -123,23 +126,33 @@ const MyFiles = () => {
                     setSelectedFile(newFile);
                     setUploadSuccessMessage('File uploaded successfully.');
                     setTimeout(() => setUploadSuccessMessage(''), 5000);
+                    setIsLoading(false);
+
                     return updatedFiles;
                 });
             })
             .catch(error => {
                 console.error("Error uploading file:", error);
+                setIsLoading(false);
+
             });
     };
 
     const handleDelete = (fileId) => {
+        setIsLoading(true);
+
         axios.delete(`http://localhost:8080/file/${user.email}/${fileId}`)
             .then(() => {
                 setFiles(files.filter(file => file.fileId !== fileId));
                 setDeleteSuccessMessage('File deleted successfully.');
                 setTimeout(() => setDeleteSuccessMessage(''), 5000);
+                setIsLoading(false);
+
             })
             .catch(error => {
                 console.error("Error deleting file:", error);
+                setIsLoading(false);
+
             });
     };
 
@@ -189,6 +202,11 @@ const MyFiles = () => {
             <Navbar toggleSidebar={toggleSidebar}/>
             <Sidebar isOpen={isSidebarOpen}/>
             <div className="home__content">
+                {isLoading && (
+                    <div className="loading-overlay">
+                        <div className="loader"></div>
+                    </div>
+                )}
                 <h1>My Files</h1>
                 <div className="upload-btn-container">
                     <input
@@ -205,40 +223,25 @@ const MyFiles = () => {
                 {deleteSuccessMessage && <div className="success-message">{deleteSuccessMessage}</div>}
                 {uploadSuccessMessage && <div className="success-message">{uploadSuccessMessage}</div>}
                 {isLoading && <div className="loader"></div>} {/* Loader displayed when loading */}
-                <table className="file-table">
-                    <thead>
-                    <tr>
-                        <th>File Name</th>
-                        <th>File Type</th>
-                        <th>Uploaded At</th>
-                        <th>Last Edited</th>
-                        <th>File Size</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
+                <div className="file-container">
                     {files.map(file => (
-                        <tr key={file.id}>
-                             { file.fileType === "pdf" ? <td><Link to={`/view/pdf/${file.fileId}`}>{file.fileName}</Link></td> :
-                            <td><Link to={`/edit/${file.fileId}`}>{file.fileName}</Link></td> }
-                            <td>{file.fileType}</td>
-                            <td>{file.uploadedAt}</td>
-                            <td>{file.lastEditedAt}</td>
-                            <td>{file.fileSize}</td>
-                            <td>
-                                <div className="button-container">
-                                    <button className="share-btn" onClick={() => handleShareButtonClick(file)}>Share
-                                    </button>
-                                    <button className="summarize-btn" onClick={() => handleSummarize(file)}>TL;DR
-                                    </button>
-                                    <button className="delete-btn" onClick={() => handleDelete(file.fileId)}>Delete
-                                    </button>
+                        <div key={file.id} className="file-block">
+                            <div className="file-header">
+                                { file.fileType === "pdf" ? <Link to={`/view/pdf/${file.fileId}`}><img src="/images/pdf.png" alt="PDF icon"/></Link> :
+                                    <Link to={`/edit/${file.fileId}`}><img src="/images/icons8-word-file-96.png" alt="DOC icon"/></Link> }
+                                <div className="file-info">
+                                    <p>{file.fileName}</p>
+                                    <p>Last Edited: {file.lastEditedAt}</p>
                                 </div>
-                            </td>
-                        </tr>
-                        ))}
-                    </tbody>
-                </table>
+                            </div>
+                            <div className="button-container">
+                                <button className="share-btn"  onClick={() => handleShareButtonClick(file)}><img src="/images/icons8-share-30.png" alt="Share" /></button>
+                                <button className="summarize-btn" onClick={() => handleSummarize(file)}><img src="/images/icons8-chatgpt-30.png" alt="Share" /></button>
+                                <button className="delete-btn" onClick={() => handleDelete(file.fileId)}><img src="/images/icons8-delete-36.png" alt="Share" /></button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
                 <Modal isOpen={isModalOpen} onClose={closeModal} content={modalContent}/>
                 {shareModalOpen && (
                     <ShareModal
