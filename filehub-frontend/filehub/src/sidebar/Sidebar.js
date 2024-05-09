@@ -27,18 +27,18 @@ const Sidebar = ({ isOpen }) => {
                         <span className={isOpen ? 'sidebar__text' : 'sidebar__text sidebar__text--collapsed'}>Shared Files</span>
                     </NavLink>
                 </li>
-                <li className="sidebar__item">
-                    <NavLink to="/compressfiles" className="sidebar__link" activeClassName="sidebar__link--active">
-                        <FaCompress />
-                        <span className={isOpen ? 'sidebar__text' : 'sidebar__text sidebar__text--collapsed'}>Compress Files</span>
-                    </NavLink>
-                </li>
-                <li className="sidebar__item">
-                    <NavLink to="/settings" className="sidebar__link" activeClassName="sidebar__link--active">
-                        <FaCog />
-                        <span className={isOpen ? 'sidebar__text' : 'sidebar__text sidebar__text--collapsed'}>Settings</span>
-                    </NavLink>
-                </li>
+                {/*<li className="sidebar__item">*/}
+                {/*    <NavLink to="/compressfiles" className="sidebar__link" activeClassName="sidebar__link--active">*/}
+                {/*        <FaCompress />*/}
+                {/*        <span className={isOpen ? 'sidebar__text' : 'sidebar__text sidebar__text--collapsed'}>Compress Files</span>*/}
+                {/*    </NavLink>*/}
+                {/*</li>*/}
+                {/*<li className="sidebar__item">*/}
+                {/*    <NavLink to="/settings" className="sidebar__link" activeClassName="sidebar__link--active">*/}
+                {/*        <FaCog />*/}
+                {/*        <span className={isOpen ? 'sidebar__text' : 'sidebar__text sidebar__text--collapsed'}>Settings</span>*/}
+                {/*    </NavLink>*/}
+                {/*</li>*/}
                 <li className="sidebar__item">
                     <NavLink to="/logout" className="sidebar__link" activeClassName="sidebar__link--active">
                         <FaSignOutAlt />
