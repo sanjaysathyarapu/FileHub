@@ -35,7 +35,7 @@ import com.example.FileHub.service.File.FileService;
 
 @RestController
 @RequestMapping("/file")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://file-hub1.vercel.app/")
 
 public class FileController {
 
