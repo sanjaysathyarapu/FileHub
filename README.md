@@ -38,6 +38,23 @@ FileHub is an advanced file management system designed to streamline collaborati
 ## Architecture Diagram
 <img width="947" alt="Screenshot 2024-05-12 at 11 00 46 PM" src="https://github.com/sanjaysathyarapu/FileHub/assets/143290734/bd925202-77bc-4e27-9c2a-5422daeb31e9">
 
+# Application Images
+## FileHub Landing Page
+![Login Page](https://github.com/sanjaysathyarapu/FileHub/assets/143290734/b8829c75-28d4-49ef-9c1a-bfdbdf87c6e6)
+
+## FileHub Login Page
+![Login Form](https://github.com/sanjaysathyarapu/FileHub/assets/143290734/9ab9baf7-4027-47a7-af69-157a57613fa8)
+
+## FileHub Dashboard
+![Dashboard](https://github.com/sanjaysathyarapu/FileHub/assets/143290734/37809d52-caa5-45cd-b376-74ec8cfac7f1)
+
+## FileHub My Files page
+![My Files](https://github.com/sanjaysathyarapu/FileHub/assets/143290734/230e4e47-b07d-41d6-b1dd-3ff433bc29b8)
+
+## FileHub Document Summarization
+![Doc Summarization](https://github.com/sanjaysathyarapu/FileHub/assets/143290734/8ec92297-685a-4782-b0ab-ca8b162c1589)
+
+# AWS 
 ## Code Build
 <img width="1035" alt="Screenshot 2024-05-12 at 11 10 31 PM" src="https://github.com/sanjaysathyarapu/FileHub/assets/143290734/cacb7009-1611-4a26-96f9-728d04d26921">
 
