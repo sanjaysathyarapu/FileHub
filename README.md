@@ -4,10 +4,10 @@
 
 ***Tech Rebooters 2.0***
 
-- Vidhi Agarwal 
-- Aishwarya Manoharan
-- Upasana Kumar
-- Sanjay Sathyarapu
+- [Vidhi Agarwal](https://github.com/avidhi2100) 
+- [Aishwarya Manoharan](https://github.com/aishwarya-mano)
+- [Upasana Kumar](https://github.com/upasanakr)
+- [Sanjay Sathyarapu](https://github.com/sanjaysathyarapu)
 
 
 ## Project Introduction
