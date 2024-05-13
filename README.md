@@ -51,21 +51,16 @@ Before you begin, ensure you have the following installed on your system:
 - Java JDK and Maven (for backend)
 - Git for version control
 
-### Backend Setup
-- Clone the repository:
+### Frontend Set up
 
-''' git clone https://github.com/yourgithubusername/filehub.git '''
-''' cd filehub/backend '''
+- Navigate to the frontend directory:
+  cd filehub/frontend
 
--Set up environment variables:
-Create a .env file in the root of the backend directory and update it with your AWS credentials and other required configurations:
-'''
-AWS_ACCESS_KEY_ID=YOUR_ACCESS_KEY
-AWS_SECRET_ACCESS_KEY=YOUR_SECRET_KEY
-DB_URL=jdbc:mysql://yourdatabaseurl:3306/yourdbname
-DB_USERNAME=yourdbusername
-DB_PASSWORD=yourdbpassword
-'''
+- Install dependencies:
+  npm install
+
+- Start the frontend application:
+  npm start
 
 Verifying the Installation
 After starting both the backend and frontend, open your web browser and navigate to http://localhost:3000. You should see the FileHub application running. Try uploading a file or performing other operations to ensure the system is functioning correctly.
