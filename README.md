@@ -14,6 +14,10 @@
 
 FileHub is an advanced file management system designed to streamline collaboration and enhance security in digital workplaces. Leveraging Amazon Web Services (AWS) and integrated with Okta for Single Sign-On (SSO), FileHub offers robust, scalable solutions for storing, sharing, and managing files efficiently. Its exclusive editing mode ensures document integrity by allowing only one user to edit at a time, making it an essential tool for modern organizational needs.
 
+## Project Links
+
+- [Project Plan](https://docs.google.com/document/d/1jLN3YBOK8QjCcN7U-6gUzsWjehLtDkJoyI5dU0YkhB0/edit)
+
 
 ## Features
 
