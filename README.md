@@ -17,6 +17,9 @@ FileHub is an advanced file management system designed to streamline collaborati
 ## Project Links
 
 - [Project Plan](https://docs.google.com/document/d/1jLN3YBOK8QjCcN7U-6gUzsWjehLtDkJoyI5dU0YkhB0/edit)
+- [Project Presentation](https://docs.google.com/presentation/d/1hAWVwTi2C82RMyNZqttpSwPgynlQi1lCZBkiNM_YiwE/edit#slide=id.p2)
+- [Project Report](https://docs.google.com/document/d/1n5pb75LE2lYqsPy2MbmNYJ8xZ9u4PYAyg2TfFEGAki4/edit)
+- [GitHub Link](https://github.com/sanjaysathyarapu/FileHub)
 
 
 ## Features
