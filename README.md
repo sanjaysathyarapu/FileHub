@@ -38,3 +38,40 @@ FileHub is an advanced file management system designed to streamline collaborati
 ## Architecture Diagram
 <img width="947" alt="Screenshot 2024-05-12 at 11 00 46 PM" src="https://github.com/sanjaysathyarapu/FileHub/assets/143290734/bd925202-77bc-4e27-9c2a-5422daeb31e9">
 
+## Code Build
+<img width="1035" alt="Screenshot 2024-05-12 at 11 10 31 PM" src="https://github.com/sanjaysathyarapu/FileHub/assets/143290734/cacb7009-1611-4a26-96f9-728d04d26921">
+
+## EC2
+<img width="1040" alt="Screenshot 2024-05-12 at 11 11 09 PM" src="https://github.com/sanjaysathyarapu/FileHub/assets/143290734/4f97fec1-54d8-40f7-8674-58c197409a30">
+
+## SNS
+<img width="1032" alt="Screenshot 2024-05-12 at 11 12 54 PM" src="https://github.com/sanjaysathyarapu/FileHub/assets/143290734/f13aa563-8d85-4c31-8a5a-71324d8881d3">
+
+## S3
+<img width="1045" alt="image" src="https://github.com/sanjaysathyarapu/FileHub/assets/143290734/e6f07f85-af4a-4ae0-a458-45240c446ef0">
+
+## Lamda
+<img width="1029" alt="image" src="https://github.com/sanjaysathyarapu/FileHub/assets/143290734/5a9a7142-b80c-4dbe-8c69-d0019540a45d">
+
+## CloudFormation
+<img width="1028" alt="image" src="https://github.com/sanjaysathyarapu/FileHub/assets/143290734/b879d5f1-327a-42fc-b89d-b70d3a2ff0cb">
+
+## CloudFront
+<img width="1032" alt="image" src="https://github.com/sanjaysathyarapu/FileHub/assets/143290734/30725d22-8fb4-4bca-8bd0-af3857152583">
+
+## RDS
+<img width="1041" alt="image" src="https://github.com/sanjaysathyarapu/FileHub/assets/143290734/13d4f495-1d4b-4bd1-ba63-7b24b9f7c6cc">
+
+## OpenAI Assistant API
+<img width="1030" alt="image" src="https://github.com/sanjaysathyarapu/FileHub/assets/143290734/e0e7bda9-983c-4efa-b7f5-9520fb7429a1">
+
+
+
+
+
+
+
+
+
+
+
