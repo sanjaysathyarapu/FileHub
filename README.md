@@ -42,6 +42,35 @@ FileHub is an advanced file management system designed to streamline collaborati
 - AWS CloudFront
 - AWS CloudWatch
 
+# Installation
+
+## Prerequisites
+Before you begin, ensure you have the following installed on your system:
+
+- Node.js and npm (Node Package Manager)
+- Java JDK and Maven (for backend)
+- Git for version control
+
+### Backend Setup
+- Clone the repository:
+'''
+git clone https://github.com/yourgithubusername/filehub.git
+cd filehub/backend
+'''
+
+-Set up environment variables:
+Create a .env file in the root of the backend directory and update it with your AWS credentials and other required configurations:
+'''
+AWS_ACCESS_KEY_ID=YOUR_ACCESS_KEY
+AWS_SECRET_ACCESS_KEY=YOUR_SECRET_KEY
+DB_URL=jdbc:mysql://yourdatabaseurl:3306/yourdbname
+DB_USERNAME=yourdbusername
+DB_PASSWORD=yourdbpassword
+'''
+
+Verifying the Installation
+After starting both the backend and frontend, open your web browser and navigate to http://localhost:3000. You should see the FileHub application running. Try uploading a file or performing other operations to ensure the system is functioning correctly.
+
 ## Architecture Diagram
 <img width="947" alt="Screenshot 2024-05-12 at 11 00 46 PM" src="https://github.com/sanjaysathyarapu/FileHub/assets/143290734/bd925202-77bc-4e27-9c2a-5422daeb31e9">
 
