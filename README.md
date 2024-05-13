@@ -1,10 +1,36 @@
-# FileHub App
 
-## commands to run the assistant API
+# FileHub
 
-**1.Install all the libraries in the requirements.txt**
-  - pip install -r requirements.txt
-    
-**2.Run the python script**
-  - python app.py
 
+***Tech Rebooters 2.0***
+
+- Vidhi Agarwal 
+- Aishwarya Manoharan
+- Upasana Kumar
+- Sanjay Sathyarapu
+
+
+## Project Introduction
+
+FileHub is an advanced file management system designed to streamline collaboration and enhance security in digital workplaces. Leveraging Amazon Web Services (AWS) and integrated with Okta for Single Sign-On (SSO), FileHub offers robust, scalable solutions for storing, sharing, and managing files efficiently. Its exclusive editing mode ensures document integrity by allowing only one user to edit at a time, making it an essential tool for modern organizational needs.
+
+
+## Features
+
+- Upload, Share, and Delete files securely.
+- Single Sign-On with Google integration.
+- File Analytics
+- Document Summarization using OpenAI.
+- Real time File Editing
+- File types conversion (pdf to docs)
+- Real time notifications
+
+## Cloud Features
+
+- AWS S3
+- AWS EC2
+- AWS RDS
+- AWS Lambda
+- AWS IAM
+- AWS CloudFront
+- AWS CloudWatch
