@@ -53,10 +53,9 @@ Before you begin, ensure you have the following installed on your system:
 
 ### Backend Setup
 - Clone the repository:
-'''
-git clone https://github.com/yourgithubusername/filehub.git
-cd filehub/backend
-'''
+
+''' git clone https://github.com/yourgithubusername/filehub.git '''
+''' cd filehub/backend '''
 
 -Set up environment variables:
 Create a .env file in the root of the backend directory and update it with your AWS credentials and other required configurations:
