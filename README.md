@@ -34,3 +34,7 @@ FileHub is an advanced file management system designed to streamline collaborati
 - AWS IAM
 - AWS CloudFront
 - AWS CloudWatch
+
+## Architecture Diagram
+<img width="947" alt="Screenshot 2024-05-12 at 11 00 46 PM" src="https://github.com/sanjaysathyarapu/FileHub/assets/143290734/bd925202-77bc-4e27-9c2a-5422daeb31e9">
+
